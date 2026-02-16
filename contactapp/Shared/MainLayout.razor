@@ -1,0 +1,13 @@
+@namespace ContactManager.Shared
+@inherits LayoutComponentBase
+
+<div class="d-flex" style="min-height:100vh;">
+    <div class="border-end bg-light" style="width:220px;">
+        <NavMenu />
+    </div>
+    <div class="flex-grow-1">
+        <div class="container-fluid p-4">
+            @Body
+        </div>
+    </div>
+</div>

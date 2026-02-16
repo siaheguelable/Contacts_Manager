@@ -1,0 +1,56 @@
+@page "/login"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <div class="mb-3">
+        <label>Username or Email</label>
+        <InputText class="form-control" @bind-Value="loginModel.UserOrEmail" />
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <InputText type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Login</button>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="text-danger mt-2">@error</div>
+    }
+</EditForm>
+
+<div class="mt-3">
+    <p>Don't have an account? <a href="/register">Sign up</a></p>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string? error;
+
+    private async Task HandleLogin()
+    {
+        error = null;
+        var payload = new { UserOrEmail = loginModel.UserOrEmail, Password = loginModel.Password };
+        var uri = Navigation.ToAbsoluteUri("/api/account/login");
+        var resp = await Http.PostAsJsonAsync(uri, payload);
+        if (!resp.IsSuccessStatusCode)
+        {
+            if (resp.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                error = "Invalid credentials";
+            else
+                error = "Login failed";
+            return;
+        }
+
+        Navigation.NavigateTo("/Contacts", true);
+    }
+
+    private class LoginModel
+    {
+        public string UserOrEmail { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+}

@@ -1,0 +1,74 @@
+@page "/AddEditContact"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject ContactService ContactService
+@inject NavigationManager NavigationManager
+@using ContactManager.Models
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+
+<div class="container mt-4">
+    <h3>@(isEdit ? "Edit Contact" : "Add Contact")</h3>
+
+    <EditForm Model="contact" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Name</label>
+                <InputText class="form-control" @bind-Value="contact.Name" />
+            </div>
+            <div class="col-md-6">
+                <label>Email</label>
+                <InputText class="form-control" @bind-Value="contact.Email" />
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Phone</label>
+                <InputText class="form-control" @bind-Value="contact.Phone" />
+            </div>
+            <div class="col-md-6">
+                <label>Notes</label>
+                <InputTextArea class="form-control" @bind-Value="contact.Notes" />
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+    </EditForm>
+</div>
+
+@code {
+    private Contact contact = new Contact();
+    private bool isEdit = false;
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string? Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            isEdit = true;
+            contact = await ContactService.GetByIdAsync(Id);
+        }
+    }
+
+    async Task HandleValidSubmit()
+    {
+        if (isEdit)
+        {
+            await ContactService.UpdateAsync(contact.Id!, contact);
+        }
+        else
+        {
+            await ContactService.CreateAsync(contact);
+        }
+        NavigationManager.NavigateTo("/Contacts");
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("/Contacts");
+    }
+}

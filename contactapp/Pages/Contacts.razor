@@ -1,0 +1,67 @@
+@page "/Contacts"
+@inject ContactService ContactService
+@inject NavigationManager NavigationManager
+@using ContactManager.Models
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+<div class="container mt-4">
+    <h3>Contacts</h3>
+
+    @if (contacts == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else if (!contacts.Any())
+    {
+        <p>No contacts yet. Click "Add Contact" to create one.</p>
+    }
+    else
+    {
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Notes</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var contact in contacts)
+                {
+                    <tr>
+                        <td>@contact.Name</td>
+                        <td>@contact.Email</td>
+                        <td>@contact.Phone</td>
+                        <td>@contact.Notes</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" @onclick="() => EditContact(contact.Id!)">Edit</button>
+                            <button class="btn btn-danger btn-sm" @onclick="() => DeleteContact(contact.Id!)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@code {
+    private List<Contact>? contacts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        contacts = await ContactService.GetAsync();
+    }
+
+    void EditContact(string id)
+    {
+        NavigationManager.NavigateTo($"/AddEditContact?id={id}");
+    }
+
+    async Task DeleteContact(string id)
+    {
+        await ContactService.DeleteAsync(id);
+        contacts = await ContactService.GetAsync();
+    }
+}

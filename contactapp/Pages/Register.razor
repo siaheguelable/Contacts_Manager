@@ -1,0 +1,69 @@
+@page "/register"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Register</h3>
+
+<EditForm Model="registerModel" OnValidSubmit="HandleRegister">
+    <div class="mb-3">
+        <label>Username</label>
+        <InputText class="form-control" @bind-Value="registerModel.UserName" />
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="registerModel.Email" />
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <InputText type="password" class="form-control" @bind-Value="registerModel.Password" />
+    </div>
+    <div class="mb-3">
+        <label>Confirm Password</label>
+        <InputText type="password" class="form-control" @bind-Value="registerModel.ConfirmPassword" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Register</button>
+
+    @if (!string.IsNullOrEmpty(error))
+    {
+        <div class="text-danger mt-2">@error</div>
+    }
+</EditForm>
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    private string? error;
+
+    private async Task HandleRegister()
+    {
+        error = null;
+        if (registerModel.Password != registerModel.ConfirmPassword)
+        {
+            error = "Passwords do not match";
+            return;
+        }
+
+        var payload = new { UserName = registerModel.UserName, Email = registerModel.Email, Password = registerModel.Password };
+        var uri = Navigation.ToAbsoluteUri("/api/account/register");
+        var resp = await Http.PostAsJsonAsync(uri, payload);
+        if (!resp.IsSuccessStatusCode)
+        {
+            if (resp.StatusCode == System.Net.HttpStatusCode.Conflict)
+                error = await resp.Content.ReadAsStringAsync();
+            else
+                error = "Registration failed";
+            return;
+        }
+
+        // Force reload so cookie is picked up
+        Navigation.NavigateTo("/Contacts", true);
+    }
+
+    private class RegisterModel
+    {
+        public string UserName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+}

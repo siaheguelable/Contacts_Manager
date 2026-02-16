@@ -1,0 +1,57 @@
+@namespace ContactManager.Shared
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components
+@using ContactManager.Services
+@using Microsoft.AspNetCore.Components.Authorization
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">Contact Manager</a>
+        <div class="collapse navbar-collapse">
+                <AuthorizeView>
+                    <Authorized>
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="Contacts">Contacts</NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="AddEditContact">Add Contact</NavLink>
+                            </li>
+                        </ul>
+                    </Authorized>
+                </AuthorizeView>
+
+                    
+
+                <ul class="navbar-nav">
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="nav-item nav-link">Hello, @context.User.Identity?.Name</li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" @onclick="Logout">Logout</a>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="/login">Login</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="/register">Register</NavLink>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                </ul>
+            </div>
+
+        @code {
+            [Inject] private HttpClient Http { get; set; } = default!;
+            [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+            private async Task Logout()
+            {
+                await Http.PostAsync("/api/account/logout", null);
+                Navigation.NavigateTo("/", true);
+            }
+        }
+    </div>
+</nav>
