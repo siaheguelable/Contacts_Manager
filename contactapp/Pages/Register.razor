@@ -1,6 +1,7 @@
 @page "/register"
-@inject HttpClient Http
+@using Microsoft.JSInterop
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
 
 <h3>Register</h3>
 
@@ -44,19 +45,19 @@
         }
 
         var payload = new { UserName = registerModel.UserName, Email = registerModel.Email, Password = registerModel.Password };
-        var uri = Navigation.ToAbsoluteUri("/api/account/register");
-        var resp = await Http.PostAsJsonAsync(uri, payload);
-        if (!resp.IsSuccessStatusCode)
+        var result = await JS.InvokeAsync<System.Text.Json.JsonElement>("auth.postJson", "/api/account/register", payload);
+        var status = result.GetProperty("status").GetInt32();
+        var text = result.GetProperty("text").GetString();
+        if (status == 200)
         {
-            if (resp.StatusCode == System.Net.HttpStatusCode.Conflict)
-                error = await resp.Content.ReadAsStringAsync();
-            else
-                error = "Registration failed";
+            Navigation.NavigateTo("/dashboard", true);
             return;
         }
 
-        // Force reload so cookie is picked up
-        Navigation.NavigateTo("/Contacts", true);
+        if (status == 409)
+            error = string.IsNullOrEmpty(text) ? "Conflict" : text;
+        else
+            error = string.IsNullOrEmpty(text) ? "Registration failed" : text;
     }
 
     private class RegisterModel

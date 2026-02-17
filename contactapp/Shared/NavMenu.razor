@@ -28,7 +28,7 @@
                             <Authorized>
                                 <li class="nav-item nav-link">Hello, @context.User.Identity?.Name</li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#" @onclick="Logout">Logout</a>
+                                    <a class="nav-link" href="/login" @onclick="Logout">Logout</a>
                                 </li>
                             </Authorized>
                             <NotAuthorized>
@@ -49,8 +49,9 @@
 
             private async Task Logout()
             {
-                await Http.PostAsync("/api/account/logout", null);
-                Navigation.NavigateTo("/", true);
+                var uri = Navigation.ToAbsoluteUri("/api/account/logout");
+                await Http.PostAsync(uri, null);
+                Navigation.NavigateTo("/login", true);
             }
         }
     </div>

@@ -1,0 +1,24 @@
+@page "/dashboard"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@inject NavigationManager Navigation
+
+<div class="container mt-4">
+    <h3>Dashboard</h3>
+
+    <AuthorizeView>
+        <Authorized>
+            <p>Welcome to your dashboard.</p>
+
+            <div class="d-flex gap-3 mt-3">
+                <button class="btn btn-outline-primary btn-lg" @onclick='() => Navigation.NavigateTo("/Contacts")'>View Contacts</button>
+                <button class="btn btn-primary btn-lg" @onclick='() => Navigation.NavigateTo("/AddEditContact")'>Add Contact</button>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <p>You must <a href="/login">login</a> to see your dashboard.</p>
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+}

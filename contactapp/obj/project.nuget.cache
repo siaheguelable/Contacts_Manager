@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "aufDiTuUXXY=",
+  "dgSpecHash": "SuItvh8H+/k=",
   "success": true,
-  "projectFilePath": "d:\\Contacts_Manager-1\\contactapp\\contactapp.csproj",
+  "projectFilePath": "D:\\Contacts_Manager-1\\contactapp\\contactapp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\curtis siahe\\.nuget\\packages\\awssdk.core\\3.7.100.14\\awssdk.core.3.7.100.14.nupkg.sha512",
     "C:\\Users\\curtis siahe\\.nuget\\packages\\awssdk.securitytoken\\3.7.100.14\\awssdk.securitytoken.3.7.100.14.nupkg.sha512",
@@ -16,5 +16,15 @@
     "C:\\Users\\curtis siahe\\.nuget\\packages\\snappier\\1.0.0\\snappier.1.0.0.nupkg.sha512",
     "C:\\Users\\curtis siahe\\.nuget\\packages\\zstdsharp.port\\0.6.2\\zstdsharp.port.0.6.2.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "projectPath": "D:\\Contacts_Manager-1\\contactapp\\contactapp.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\Contacts_Manager-1\\contactapp\\contactapp.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
