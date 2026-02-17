@@ -13,9 +13,6 @@
     <SourceRoot Include="C:\Users\curtis siahe\.nuget\packages\" />
     <SourceRoot Include="C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages\" />
   </ItemGroup>
-  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
-    <Import Project="$(NuGetPackageRoot)microsoft.aspnetcore.app.internal.assets\10.0.3\build\Microsoft.AspNetCore.App.Internal.Assets.props" Condition="Exists('$(NuGetPackageRoot)microsoft.aspnetcore.app.internal.assets\10.0.3\build\Microsoft.AspNetCore.App.Internal.Assets.props')" />
-  </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgAWSSDK_Core Condition=" '$(PkgAWSSDK_Core)' == '' ">C:\Users\curtis siahe\.nuget\packages\awssdk.core\3.7.100.14</PkgAWSSDK_Core>
     <PkgAWSSDK_SecurityToken Condition=" '$(PkgAWSSDK_SecurityToken)' == '' ">C:\Users\curtis siahe\.nuget\packages\awssdk.securitytoken\3.7.100.14</PkgAWSSDK_SecurityToken>
